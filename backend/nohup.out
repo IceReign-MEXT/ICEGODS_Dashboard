@@ -1,0 +1,29 @@
+/data/data/com.termux/files/usr/lib/python3.12/site-packages/web3/__init__.py:2: UserWarning: pkg_resources is deprecated as an API. See https://setuptools.pypa.io/en/latest/pkg_resources.html. The pkg_resources package is slated for removal as early as 2025-11-30. Refrain from using this package or pin to Setuptools<81.
+  import pkg_resources
+✅ Connected to Ethereum node
+Traceback (most recent call last):
+  File "/data/data/com.termux/files/home/dashboard_project/backend/deploy_and_sweep.py", line 30, in <module>
+    print("Deployer:", w3.eth.account.from_key(DEPLOYER_PK).address)
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/data/data/com.termux/files/usr/lib/python3.12/site-packages/eth_utils/decorators.py", line 29, in _wrapper
+    return self.method(obj, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/data/data/com.termux/files/usr/lib/python3.12/site-packages/eth_account/account.py", line 266, in from_key
+    key = self._parsePrivateKey(private_key)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/data/data/com.termux/files/usr/lib/python3.12/site-packages/eth_utils/decorators.py", line 29, in _wrapper
+    return self.method(obj, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/data/data/com.termux/files/usr/lib/python3.12/site-packages/eth_account/account.py", line 823, in _parsePrivateKey
+    return self._keys.PrivateKey(HexBytes(key))
+                                 ^^^^^^^^^^^^^
+  File "/data/data/com.termux/files/usr/lib/python3.12/site-packages/hexbytes/main.py", line 23, in __new__
+    bytesval = to_bytes(val)
+               ^^^^^^^^^^^^^
+  File "/data/data/com.termux/files/usr/lib/python3.12/site-packages/hexbytes/_utils.py", line 17, in to_bytes
+    return hexstr_to_bytes(val)
+           ^^^^^^^^^^^^^^^^^^^^
+  File "/data/data/com.termux/files/usr/lib/python3.12/site-packages/hexbytes/_utils.py", line 50, in hexstr_to_bytes
+    return binascii.unhexlify(ascii_hex)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+binascii.Error: Non-hexadecimal digit found
