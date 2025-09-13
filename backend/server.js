@@ -1,41 +1,42 @@
 import express from "express";
 import cors from "cors";
-import fetch from "node-fetch";
 import dotenv from "dotenv";
+import fetch from "node-fetch";
 
 dotenv.config();
 
 const app = express();
-const PORT = process.env.PORT || 5000;
-
 app.use(cors());
 app.use(express.json());
 
-// Telegram notification
-app.post("/api/notify", async (req, res) => {
-  const { chatId, message } = req.body;
+// -------------------------
+// Example endpoints
+// -------------------------
+
+// Health check
+app.get("/", (req, res) => {
+  res.send("🚀 ICEGODS Backend Running!");
+});
+
+// Get ETH balance (mock example)
+app.get("/balance/eth/:address", async (req, res) => {
+  const address = req.params.address;
+  // TODO: connect real Ethereum API (Infura/Etherscan)
+  res.json({ address, balance: Math.floor(Math.random() * 10) + " ETH" });
+});
+
+// Telegram test message
+app.get("/notify", async (req, res) => {
+  const chatId = process.env.TELEGRAM_CHAT_ID;
+  const token = process.env.TELEGRAM_TOKEN;
   try {
-    const url = `https://api.telegram.org/bot${process.env.TELEGRAM_BOT_TOKEN}/sendMessage`;
-    const resp = await fetch(url, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ chat_id: chatId, text: message }),
-    });
-    const data = await resp.json();
-    res.json({ success: data.ok });
+    await fetch(`https://api.telegram.org/bot${token}/sendMessage?chat_id=${chatId}&text=Hello from ICEGODS Backend`);
+    res.json({ success: true });
   } catch (err) {
-    res.status(500).json({ success: false, error: err.message });
+    res.json({ success: false, error: err.message });
   }
 });
 
-// ETH balance check
-app.get("/api/balance/eth/:wallet", async (req, res) => {
-  const wallet = req.params.wallet;
-  // For simplicity: return fake balance
-  const balance = (Math.random() * 10).toFixed(4) + " ETH";
-  res.json({ wallet, balance });
-});
-
-app.listen(PORT, () => {
-  console.log(`🚀 Backend running on http://localhost:${PORT}`);
-});
+// Start server
+const PORT = process.env.PORT || 5000;
+app.listen(PORT, () => console.log(`🚀 Backend running on http://localhost:${PORT}`));
