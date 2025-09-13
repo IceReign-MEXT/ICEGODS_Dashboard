@@ -20,7 +20,7 @@ def subscribe():
     success = payment_logic.verify_payment(tx_hash, plan)
 
     if success:
-        # You can add DB recording here later
+        # You can add DB recording here
         return jsonify({"status": "success", "user": user, "plan": plan}), 200
     else:
         return jsonify({"status": "fail", "reason": "Payment not found"}), 400
