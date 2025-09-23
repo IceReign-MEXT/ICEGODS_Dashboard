@@ -1,0 +1,12 @@
+services:
+  - type: web
+    name: icegods-backend
+    env: python
+    buildCommand: pip install -r backend/requirements.txt
+    startCommand: python backend/server.py
+    plan: free
+    envVars:
+      - key: STRIPE_SECRET_KEY
+        sync: false
+      - key: STRIPE_WEBHOOK_SECRET
+        sync: false
