@@ -1,4 +1,5 @@
 services:
+  # Backend (Flask)
   - type: web
     name: icegods-backend
     env: python
@@ -10,3 +11,11 @@ services:
         sync: false
       - key: STRIPE_WEBHOOK_SECRET
         sync: false
+
+  # Frontend (React)
+  - type: web
+    name: icegods-frontend
+    env: node
+    buildCommand: cd frontend && npm install && npm run build
+    startCommand: cd frontend && npx serve -s build
+    plan: free
