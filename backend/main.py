@@ -1,29 +1,38 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+
+import os
+import stripe
 from flask import Flask, request, jsonify
-from payments import payment_logic
+from dotenv import load_dotenv
+
+# Load environment variables
+load_dotenv()
 
 app = Flask(__name__)
 
-@app.route("/")
-def home():
-    return jsonify({"message": "🚀 ICEGODS Dashboard Backend Running!"})
+# Stripe keys from .env
+stripe.api_key = os.getenv("STRIPE_SECRET_KEY")
 
-@app.route("/subscribe", methods=["POST"])
-def subscribe():
-    data = request.json
-    user = data.get("user")
-    plan = data.get("plan")
-    tx_hash = data.get("tx_hash")
+@app.route("/create-payment-intent", methods=["POST"])
+def create_payment_intent():
+    try:
+        data = request.get_json()
+        amount = data.get("amount")
 
-    if not user or not plan or not tx_hash:
-        return jsonify({"status": "fail", "reason": "Missing fields"}), 400
+        if not amount:
+            return jsonify({"error": "Amount is required"}), 400
 
-    success = payment_logic.verify_payment(tx_hash, plan)
+        # Create a PaymentIntent
+        intent = stripe.PaymentIntent.create(
+            amount=amount,
+            currency="usd",
+        )
 
-    if success:
-        # You can add DB recording here
-        return jsonify({"status": "success", "user": user, "plan": plan}), 200
-    else:
-        return jsonify({"status": "fail", "reason": "Payment not found"}), 400
+        return jsonify({"client_secret": intent.client_secret})
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
 
 if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=5000, debug=True)
+    port = int(os.getenv("PORT", 5000))
+    app.run(host="0.0.0.0", port=port)

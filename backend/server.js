@@ -1,42 +1,44 @@
-import express from "express";
-import cors from "cors";
-import dotenv from "dotenv";
-import fetch from "node-fetch";
+import express from 'express';
+import cors from 'cors';
+import dotenv from 'dotenv';
+import Stripe from 'stripe';
 
 dotenv.config();
 
 const app = express();
+const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
+
 app.use(cors());
 app.use(express.json());
 
-// -------------------------
-// Example endpoints
-// -------------------------
-
-// Health check
-app.get("/", (req, res) => {
-  res.send("🚀 ICEGODS Backend Running!");
+// Test route
+app.get('/', (req, res) => {
+  res.send('🚀 ICEGODS Backend Running!');
 });
 
-// Get ETH balance (mock example)
-app.get("/balance/eth/:address", async (req, res) => {
-  const address = req.params.address;
-  // TODO: connect real Ethereum API (Infura/Etherscan)
-  res.json({ address, balance: Math.floor(Math.random() * 10) + " ETH" });
-});
-
-// Telegram test message
-app.get("/notify", async (req, res) => {
-  const chatId = process.env.TELEGRAM_CHAT_ID;
-  const token = process.env.TELEGRAM_TOKEN;
+// --- Stripe Checkout session ---
+app.post('/create-checkout-session', async (req, res) => {
   try {
-    await fetch(`https://api.telegram.org/bot${token}/sendMessage?chat_id=${chatId}&text=Hello from ICEGODS Backend`);
-    res.json({ success: true });
+    const session = await stripe.checkout.sessions.create({
+      payment_method_types: ['card'],
+      mode: 'subscription',
+      line_items: [
+        {
+          price: 'price_1YourStripePriceID', // Replace with your Stripe price ID
+          quantity: 1,
+        },
+      ],
+      success_url: `${process.env.FRONTEND_URL}/success?session_id={CHECKOUT_SESSION_ID}`,
+      cancel_url: `${process.env.FRONTEND_URL}/cancel`,
+    });
+
+    res.json({ id: session.id });
   } catch (err) {
-    res.json({ success: false, error: err.message });
+    console.error(err);
+    res.status(500).json({ error: 'Stripe session failed' });
   }
 });
 
-// Start server
-const PORT = process.env.PORT || 5000;
+// --- Start server ---
+const PORT = process.env.PORT || 5003;
 app.listen(PORT, () => console.log(`🚀 Backend running on http://localhost:${PORT}`));

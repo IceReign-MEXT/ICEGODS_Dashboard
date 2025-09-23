@@ -1,16 +1,12 @@
-import React from "react";
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import Dashboard from "./components/Dashboard";
-import Subscription from "./components/Subscription";
+import React from 'react';
+import TestPayment from './TestPayment';
 
 function App() {
   return (
-    <Router>
-      <Routes>
-        <Route path="/" element={<Dashboard />} />
-        <Route path="/subscribe" element={<Subscription />} />
-      </Routes>
-    </Router>
+    <div style={{ padding: '2rem', fontFamily: 'Arial' }}>
+      <h1>Icegods Test Payment</h1>
+      <TestPayment />
+    </div>
   );
 }
 

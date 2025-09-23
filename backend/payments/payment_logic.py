@@ -12,7 +12,7 @@ SUBSCRIPTION_CONTRACT = os.getenv("SUBSCRIPTION_CONTRACT")
 
 # Connect to Web3
 w3 = Web3(Web3.HTTPProvider(INFURA_URL))
-if w3.isConnected():
+if w3.is_connected():
     print("✅ Payment Logic initialized and Web3 connected")
 else:
     print("❌ Web3 connection failed")
