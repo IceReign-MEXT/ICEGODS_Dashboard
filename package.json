@@ -1,5 +1,10 @@
 {
-  "dependencies": {
-    "ethers": "^6.15.0"
-  }
+  "name": "ICEGODS_Dashboard",
+  "startCommand": "sh start_all.sh",
+  "branch": "main",
+  "envVars": [
+    {"key": "BOT_TOKEN", "value": "<YOUR_BOT_TOKEN>"},
+    {"key": "ADMIN_ID", "value": "<YOUR_ADMIN_ID>"},
+    {"key": "DATABASE_URL", "value": "sqlite:///data.db"}
+  ]
 }
