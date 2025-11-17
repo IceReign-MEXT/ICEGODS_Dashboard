@@ -1,2 +1,2 @@
-web: streamlit run streamlit_app.py --server.port=$PORT
-worker: python bot.py
+web: gunicorn server:app
+worker: python telegram_bot.py
